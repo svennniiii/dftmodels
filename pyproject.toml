@@ -1,0 +1,32 @@
+[project]
+name = "dftmodels"
+version = "1.0.0"
+description = "Analytical DFT models with closed-form correction terms for bias-free spectral parameter estimation."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "scipy>=1.15",
+    "lmfit>=1.0",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.2.0",
+    "ipympl>=0.10.0",
+    "matplotlib>=3.10.0",
+    "nbformat>=5.10.4",
+    "pint>=0.24.4",
+    "pyright>=1.1.408",
+    "pyside6>=6.11.0",
+    "pytest>=9.0.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dftmodels*"]
