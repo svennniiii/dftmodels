@@ -1,15 +1,29 @@
 [project]
 name = "dftmodels"
-version = "1.0.0"
+version = "1.0.1"
 description = "Analytical DFT models with closed-form correction terms for bias-free spectral parameter estimation."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
+authors = [
+    {name = "Sven Bodenstedt"}
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+]
 dependencies = [
     "numpy>=2.0",
     "scipy>=1.15",
     "lmfit>=1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/svennniiii/dftmodels"
+Source = "https://github.com/svennniiii/dftmodels"
+Issues = "https://github.com/svennniiii/dftmodels/issues"
 
 [build-system]
 requires = ["setuptools", "wheel"]
