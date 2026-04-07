@@ -51,7 +51,7 @@ An off-bin sinusoid produces a deterministic, structured residual in the DFT tha
 
 ![Correction convergence](https://raw.githubusercontent.com/svennniiii/dftmodels/main/examples/figures/02_dft_corrections_fig01.svg)
 
-The corrections become irrelevant above a crossover acquisition length where the noise floor dominates. The figure below sweeps N at fixed f_s and shows the normalized model error for each correction level alongside reference noise floors at fixed σ/A ratios. Below the crossover, the fit is model-limited; above it, noise-limited.
+The corrections matter most in the short-record, high-SNR regime and become irrelevant once the noise floor dominates. The figure below sweeps N at fixed f_s for a worst-case half-bin-off-grid sinusoid and plots, for each correction level, the fraction of the total residual budget owned by model bias: rms_model / (σ + rms_model), evaluated against two reference noise levels σ = 0.1·A and σ = 0.001·A. 0% means the residual is dominated by noise (correction irrelevant); 100% means it is dominated by the model (correction essential).
 
 ![Corrections vs acquisition length](https://raw.githubusercontent.com/svennniiii/dftmodels/main/examples/figures/02_dft_corrections_fig02.svg)
 
