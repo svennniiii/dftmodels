@@ -1,6 +1,6 @@
 [project]
 name = "dftmodels"
-version = "1.0.3"
+version = "1.0.4"
 description = "Analytical DFT models with closed-form correction terms for bias-free spectral parameter estimation."
 readme = "README.md"
 license = "MIT"
