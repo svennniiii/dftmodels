@@ -4,19 +4,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def _whisker_ends(vals, q1, q3):
+    """Furthest data point within 1.5 × IQR of each quartile (Tukey fences)."""
+    iqr = q3 - q1
+    lo = np.min(vals[vals >= q1 - 1.5 * iqr])
+    hi = np.max(vals[vals <= q3 + 1.5 * iqr])
+    return lo, hi
+
+
 def violin_panel(
     ax,
     data,
     labels=None,
-    noise_floor=None,
     crb=None,
     ylabel=None,
     title=None,
-    seed=None,
     legend=True,
 ):
     """
-    Styled violin plot with jitter, zero line, and optional reference lines.
+    Styled violin plot with quartile/whisker markers, optional reference lines.
 
     Parameters
     ----------
@@ -32,38 +38,36 @@ def violin_panel(
     ylabel : str, optional
     title : str, optional
     seed : int, optional
-        RNG seed for jitter scatter.
+        RNG seed for jitter scatter (unused, kept for API compatibility).
     legend : bool, optional
         Whether to add a legend (default True). Pass False to suppress.
     """
     positions = list(range(len(data)))
+    arrays = [np.asarray(d, dtype=float) for d in data]
 
-    parts = ax.violinplot(data, positions=positions, widths=0.7,
-                          showmedians=True, showextrema=True)
+    parts = ax.violinplot(arrays, positions=positions, widths=0.7,
+                          showmedians=False, showextrema=False)
     for pc in parts["bodies"]:
         pc.set_facecolor("C0")
-        pc.set_alpha(0.5)
-        pc.set_edgecolor("black")
-        pc.set_linewidth(0.8)
-    parts["cmedians"].set_color("black")
-    parts["cmedians"].set_linewidth(2)
-    for key in ("cmaxes", "cmins", "cbars"):
-        parts[key].set_color("gray")
-        parts[key].set_linewidth(0.8)
+        pc.set_alpha(0.8)
+        pc.set_edgecolor("C0")
+        pc.set_linewidth(0.5)
 
-    rng = np.random.default_rng(seed=seed)
-    for k, arr in enumerate(data):
-        jitter = rng.uniform(-0.1, 0.1, size=len(arr))
-        ax.scatter(positions[k] + jitter, arr, s=3, color="C0", alpha=0.25, zorder=5)
+    # Quartile boxes and whiskers
+    q1s, medians, q3s = np.percentile(arrays, [14.9, 50, 84.1], axis=1)
+    whiskers = np.array([_whisker_ends(arr, q1, q3)
+                         for arr, q1, q3 in zip(arrays, q1s, q3s)])
+    w_lo, w_hi = whiskers[:, 0], whiskers[:, 1]
 
-    ax.axhline(0, color="black", ls="--", lw=0.8, alpha=0.4)
+    ax.vlines(positions, w_lo, w_hi, color="black", linewidth=1.2, alpha=0.8, zorder=3)
+    ax.vlines(positions, q1s, q3s, color="black", linewidth=5, alpha=0.9, zorder=4)
+    ax.scatter(positions, medians, marker="o", color="white",
+               edgecolors="C0", linewidths=1.2, s=28, zorder=5)
 
-    if noise_floor is not None:
-        ax.axhline( noise_floor, color="black", ls=":", lw=1.4, alpha=0.7, label="Noise floor")
-        ax.axhline(-noise_floor, color="black", ls=":", lw=1.4, alpha=0.7)
+    ax.axhline(0, color="black", ls="--", lw=0.8, alpha=0.4, label="Ground truth")
 
     if crb is not None:
-        ax.axhline( crb, color="C1", ls="-.", lw=1.4, alpha=0.8, label="CRB")
+        ax.axhline( crb, color="C1", ls="-.", lw=1.4, alpha=0.8, label="Cramér–Rao")
         ax.axhline(-crb, color="C1", ls="-.", lw=1.4, alpha=0.8)
 
     if labels is not None:
@@ -76,5 +80,5 @@ def violin_panel(
         ax.set_ylabel(ylabel)
     if title:
         ax.set_title(title)
-    if legend and (noise_floor is not None or crb is not None):
-        ax.legend(fontsize=8)
+    if legend and (crb is not None):
+        ax.legend()
