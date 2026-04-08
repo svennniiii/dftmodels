@@ -47,6 +47,10 @@ Three normalizations are provided. **ASD** and **PSD** satisfy Parseval's theore
 
 ### DFT corrections
 
+![CFT to DTFT to DFT](https://raw.githubusercontent.com/svennniiii/dftmodels/main/examples/figures/02_dft_corrections_fig03.svg)
+
+*The three-step chain from the continuous Fourier transform (CFT) to the discrete Fourier transform (DFT). Left column: time domain — continuous signal, sampled signal, sampled and windowed signal. Right column: corresponding spectra — the CFT Lorentzian, the DTFT with aliased copies and residuals from the CFT, and the DFT bins with residuals from the DTFT. Each step introduces a new source of error that one correction term addresses.*
+
 An off-bin sinusoid produces a deterministic, structured residual in the DFT that is not captured by the WINDOW-only model. The figure below shows the residual reduction as corrections are applied in sequence. Without corrections, the RMS residual for a rectangular window at N = 100 samples is ~7×10⁻² V/√Hz; with all corrections at order 100 it drops to ~3×10⁻⁵ V/√Hz. For windows that taper to zero at both boundaries (Hann, Nuttall, Bartlett), the BASELINE correction is identically zero. The SAMPLING correction converges faster for windows with steeper sidelobe roll-off; rectangular and Bartlett windows require more orders than Hann or Nuttall (see window sweep table in Notebook 02).
 
 ![Correction convergence](https://raw.githubusercontent.com/svennniiii/dftmodels/main/examples/figures/02_dft_corrections_fig01.svg)
